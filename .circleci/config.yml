@@ -4,47 +4,10 @@ workflows:
   ci:
     jobs:
       - build
-      - publish:
-          requires: [build]
-          filters:
-            branches:
-              only:
-                - master
-
-orbs:
-  aws-cli: circleci/aws-cli@1.3.1
 
 jobs:
   build:
     docker:
       - image: cimg/go:1.12.9
-    working_directory: /root/go/src/github.com/docker/machine
     steps:
-      - checkout
-      - run: echo 'export GOPATH="$(go env GOPATH)"' >> "$BASH_ENV"
-
-      - run: TARGET_OS='darwin linux' TARGET_ARCH='amd64' make build-x
-      - persist_to_workspace:
-          root: .
-          paths:
-            - bin
-
-      - run: ln -s docker-machine-Linux-x86_64 bin/docker-machine
-      - run: apt-get update
-      - run: apt-get install --no-install-recommends --yes rsync
-      - run: go get -u golang.org/x/lint/golint
-      - run: make test
-
-  publish:
-    docker:
-      - image: cimg/python:3.8
-    environment:
-      AWS_DEFAULT_REGION: us-east-1
-    steps:
-      - attach_workspace:
-          at: .
-      - aws-cli/setup:
-          aws-access-key-id: BINARY_S3_AWS_ACCESS_KEY_ID
-          aws-secret-access-key: BINARY_S3_AWS_SECRET_ACCESS_KEY
-          profile-name: default
-      - run: aws s3 cp --recursive bin "s3://circleci-binary-releases/docker-machine/${CIRCLE_BUILD_NUM}-${CIRCLE_SHA1}/"
+      - run: echo "Content moved to the server branch"
