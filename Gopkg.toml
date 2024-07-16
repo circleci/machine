@@ -34,6 +34,10 @@
   name = "github.com/intel-go/cpuid"
   branch = "master"
 
+[[override]]
+  name = "google.golang.org/grpc"
+  version = "1.56.3"
+
 [prune]
   go-tests = true
   unused-packages = true
